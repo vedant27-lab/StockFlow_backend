@@ -205,6 +205,28 @@ def get_products():
     return jsonify(list(products.values()))
 
 @app.route("/folders/<int:id>", methods=["PUT"])
+def update_folder(id):
+    data = request.json
+    if not data or "name" not in data:
+        return jsonify({"error": "Folder name is required"}), 400
+    
+    db = get_db()
+    cur = db.cursor()
+    cur.execute("UPDATE product_folders SET name=%s WHERE id=%s", (data["name"], id))
+    db.commit()
+    cur.close()
+    db.close()
+    return jsonify({"message": "Folder updated"})
+
+@app.route("/folders/<int:id>", methods=["DELETE"])
+def delete_folder(id):
+    db = get_db()
+    cur = db.cursor()
+    cur.execute("DELETE FROM product_folders WHERE id=%s", (id,))
+    db.commit()
+    cur.close()
+    db.close()
+    return jsonify({"message": "Folder deleted"})
 
 @app.route("/products/<int:id>", methods=["PUT"])
 def update_product(id):
