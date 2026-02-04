@@ -59,6 +59,8 @@ CREATE TABLE user_permissions (
 
 -- INSERT INTO users (name, email, role)
 -- VALUES ('Admin User', 'admin@stockflow.com', 'admin');
+
+/*
 USE stockflow;
 SELECT 
     u.name,
@@ -66,4 +68,42 @@ SELECT
 FROM user_permissions up
 JOIN users u ON up.user_id = u.id
 JOIN permissions p ON up.permission_id = p.id;
+
+
+
+CREATE TABLE product_folders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+ALTER TABLE product_fields
+ADD COLUMN folder_id INT,
+ADD CONSTRAINT fk_field_folder	FOREIGN KEY (folder_id) REFERENCES product_folders(id) ON DELETE CASCADE;
+
+ALTER TABLE products
+ADD COLUMN folder_id INT,
+ADD CONSTRAINT fk_field_folder FOREIGN KEY (folder_id) REFERENCES product_folders(id) ON DELETE CASCADE;
+
+USE stockflow;
+CREATE TABLE IF NOT EXISTS product_folders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+ALTER TABLE products ADD COLUMN folder_id INT;
+ALTER TABLE product_fields ADD COLUMN folder_id INT;
+
+ALTER TABLE product_fields 
+ADD COLUMN is_analytics_target BOOLEAN DEFAULT 0;
+
+
+ALTER TABLE products DROP COLUMN quantity;
+*/
+
+ALTER TABLE product_fields 
+ADD COLUMN is_analytics_target BOOLEAN DEFAULT 0;
+
+
 

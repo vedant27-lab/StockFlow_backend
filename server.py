@@ -52,7 +52,7 @@ def get_dashboard_stats():
         "grand_total": grand_total
     })
 
-def has_permission(user_id, permission_name):
+#def has_permission(user_id, permission_name):
     #db = get_db()
     #cur = db.cursor()
 #
@@ -67,7 +67,7 @@ def has_permission(user_id, permission_name):
     #cur.close()
     #db.close()
     #return allowed
-    return True;
+    #return True;
 
 @app.route("/folders", methods=["GET"])
 def get_folders():
@@ -87,7 +87,7 @@ def create_folder():
     
     db = get_db()
     cur = db.cursor()
-    cur.execute("INSERT INTO product_folders (name) VALUES (%s)", (data["name"]))
+    cur.execute("INSERT INTO product_folders (name) VALUES (%s)", (data["name"],))
     db.commit()
     cur.close()
     db.close()
@@ -184,7 +184,7 @@ def get_products():
         LEFT JOIN product_field_values v ON p.id = v.product_id
         LEFT JOIN product_fields f ON v.field_id = f.id
         WHERE p.folder_id = %s
-    """, (folder_id))
+    """, (folder_id,))
 
     rows = cur.fetchall()
     products = {}
@@ -203,6 +203,8 @@ def get_products():
     cur.close()
     db.close()
     return jsonify(list(products.values()))
+
+@app.route("/folders/<int:id>", methods=["PUT"])
 
 @app.route("/products/<int:id>", methods=["PUT"])
 def update_product(id):
@@ -233,8 +235,8 @@ def update_product(id):
 
 @app.route("/products/<int:id>", methods=["DELETE"])
 def delete_product(id):
-    if not has_permission(CURRENT_USER_ID, "DELETE_PRODUCT"):
-        return jsonify({"error": "Permission denied"}), 403
+    #if not has_permission(CURRENT_USER_ID, "DELETE_PRODUCT"):
+     #   return jsonify({"error": "Permission denied"}), 403
     db = get_db()
     cur = db.cursor()
 
